@@ -5,21 +5,65 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        .table-container {
+            transform: translateY(50px); /* 將表格向下移動50px */
+        }
+        #space {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 0 auto;
+        }
+        #space, #space th, #space td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        #white{
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <table>
-
-    </table>
-    <center>
-        <div id="space"> </div>
-    </center>
+    <div id="white"></div>
+    <div class="center-content">
+            <table id="space">
+                <tr>
+                    <td>報到</td>
+                    <td>姓名</td>
+                    <td>座位</td>
+                </tr>
+            </table>
+    </div>
 
     <script>
-        var space=document.getElementById('space');
-        var data=JSON.parse('{{msg|tojson|safe}}');
-        console.log(data)
-        space.innerHTML=data
-        
+        fetch('/show_seat', { method: 'POST', body: '' })
+        .then(response => response.json())
+        .then(data => show(data))
+    
+        function show(data) {
+            let space = document.getElementById('space');
+    
+            // 創建一個新行
+            let row = space.insertRow();
+    
+            // 創建並填充單元格
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+    
+            cell1.innerHTML = "成功";
+            cell2.innerHTML = data.name;
+            cell3.innerHTML = data.seat;
+        }
     </script>
+    
+    
 </body>
 </html>

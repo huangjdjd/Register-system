@@ -7,37 +7,59 @@ app.secret_key = "b22VD7bKVsEa"
 def main_page():
     return render_template('main.html')
 
-@app.route('/<msg>')
-def mainf(msg):
-    if msg == "輸入錯誤":
-        return render_template('main.html', msg=msg)
-    else:
-        return render_template('main.html')
-@app.route('/success/<msg>')
-def show_seat(msg):
-    return render_template('show.html',msg=msg)
-
-@app.route('/sign_action', methods=['POST', 'GET'])
+@app.route('/login')
+def show_seat():
+    return render_template('show.html')
+@app.route('/admin_aicup')
+def show_admin():
+    return render_template('admin.html')
+@app.route('/sign_action', methods=['POST'])
 def sign_action():
-    con=sql.connect('user.db')
-    cur=con.cursor()
-    if request.method == 'POST':
-        name = request.form['Name']
+    con = sql.connect('user.db')
+    cur = con.cursor()
+    data = request.get_json()
+    name = data['name']
+    
     if name:
         cur.execute("SELECT name FROM user WHERE name = ?", (name,))
-        check_name=cur.fetchone()
-        print(check_name)
+        check_name = cur.fetchone()
+        
         if check_name:
-            cur.execute("UPDATE user set check_in=? where name=?",(1,name))
-            session['logged_in'] = True
+            cur.execute("UPDATE user set check_in=? where name=?", (1, name))
             con.commit()
-            return redirect(url_for('show_seat',msg=check_name[0]))
+            con.close()
+            session['user_name']=name
+            return js.dumps({"success": True})
         else:
-            return redirect(url_for('mainf',msg="輸入錯誤"))
+            con.close()
+            return js.dumps({"success": False, "message": "輸入錯誤"})
     else:
-        return redirect(url_for('mainf',msg="輸入錯誤"))
+        return js.dumps({"success": False, "message": "無效輸入"})
+@app.route('/show_seat', methods=['post'])
+def handle_seat():
+    con = sql.connect('user.db')
+    cur = con.cursor()
+    name=session['user_name']
+    cur.execute("SELECT seat FROM user WHERE name = ?", (name,))
+    seat=cur.fetchone()
+    print(seat[0])
+    return js.dumps({'seat':seat[0],'name':name})
     # ss=js.dumps(smsg)
-    
+@app.route('/admin_aicup_handle',methods=['post'])
+def admin():
+    name_array=[]
+    check_array=[]
+    con = sql.connect('user.db')
+    cur = con.cursor()
+    cur.execute("SELECT name FROM user")
+    names=cur.fetchall()
+    for name in names:
+        name_array.append(name[0])
+    cur.execute("SELECT check_in FROM user")
+    checks=cur.fetchall()
+    for check in checks:
+        check_array.append(check[0])
+    return js.dumps({'names': name_array, 'checks': check_array})
 
 if __name__ == '__main__':
     app.run(debug=True)

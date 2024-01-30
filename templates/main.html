@@ -10,6 +10,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
     <title>Document</title>
+    <style>
+        #show_space {
+            height: 20px; /* 或您希望的任何高度 */
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
     <center>
@@ -21,21 +27,40 @@
         <div>
             <br><br>
         </div>
-        <form method="post" action="{{url_for('sign_action')}}">
             <label for="中文姓名">中文姓名:</label><br>
-            <input type="text" name="Name">
-            <br><br><button type="submit">Sign in</button>
-        </form>
+            <input type="text" name="Name" id="Name">
+            <div id="show_space"></div>
+            <br>
+            <br><br><button type="submit" onclick="judge_name()">Sign in</button>
+
+        <div id="show_space">
+        </div>
     </center>
     <script>
-        function warning_msg(){
-            var text_msg = "{{ msg }}";
-            if(text_msg !== ""){
-                alert(text_msg);
-                return;
-            }
+        function judge_name() {
+            let name = document.getElementById('Name').value;
+            fetch('/sign_action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'name': name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/login'; // 跳轉到 show_seat 頁面
+                } else {
+                    show_word(data.message); // 顯示錯誤訊息
+                }
+            });
         }
-        window.onload = warning_msg();
+
+        function show_word(msg) {
+            let space = document.getElementById('show_space');
+            space.innerHTML = msg;
+        }
+
     </script>
 </body>
 </html>

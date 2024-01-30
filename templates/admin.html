@@ -5,8 +5,104 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <!-- <style>
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        .table-container {
+            transform: translateY(50px); /* 將表格向下移動50px */
+        }
+        #space {
+            border-collapse: collapse;
+            width: 40%;
+            margin: 0 auto;
+        }
+        #space, #space th, #space td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+        #white{
+            padding: 20px;
+        }
+    </style> -->
+    <style>
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        .table-container {
+            transform: translateY(50px); /* 將表格向下移動50px */
+        }
+        #space {
+            border-collapse: collapse;
+            width: 30%; /* 減少表格寬度 */
+            margin: 0 auto;
+        }
+        #space, #space th, #space td {
+            border: 1px solid black;
+            padding: 5px; /* 減少單元格內間距 */
+            font-size: 14px; /* 調整字體大小，如果需要 */
+        }
+    </style>
+    
 </head>
 <body>
-    
+    <div class="center-content">
+        <table id="space">
+            <tr>
+                <td>姓名</td>
+                <td>有無報到(0是無,1是有)</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // fetch('/admin_aicup_handle', { method: 'POST' })
+        // .then(response => response.json())
+        // .then(data => {
+        //     let space = document.getElementById('space');
+        //     // 清除舊的表格行
+        //     while (space.rows.length > 1) {
+        //         space.deleteRow(1);
+        //     }
+        //     // 添加新的表格行
+        //     for (let i = 0; i < data.names.length; i++) {
+        //         let row = space.insertRow();
+        //         let cell1 = row.insertCell(0);
+        //         let cell2 = row.insertCell(1);
+        //         cell1.innerHTML = data.names[i];
+        //         cell2.innerHTML = data.checks[i];
+        //     }
+        // })
+        // .catch(error => console.error('Error:', error));
+        setInterval(() => {
+            fetch('/admin_aicup_handle', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                let space = document.getElementById('space');
+                // 清除舊的表格行
+                while (space.rows.length > 1) {
+                    space.deleteRow(1);
+                }
+                // 添加新的表格行
+                for (let i = 0; i < data.names.length; i++) {
+                    let row = space.insertRow();
+                    let cell1 = row.insertCell(0);
+                    let cell2 = row.insertCell(1);
+                    cell1.innerHTML = data.names[i];
+                    cell2.innerHTML = data.checks[i];
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }, 2000); // 每5秒更新一次
+
+    </script>
 </body>
 </html>
