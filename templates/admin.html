@@ -50,6 +50,13 @@
             padding: 5px; /* 減少單元格內間距 */
             font-size: 14px; /* 調整字體大小，如果需要 */
         }
+        .checkID {
+            /* 調整 width 和 height 來控制大小 */
+            width: 15px;
+            height: 15px;
+            /* 其他樣式 */
+            cursor: pointer;
+        }
     </style>
     
 </head>
@@ -59,50 +66,63 @@
             <tr>
                 <td>姓名</td>
                 <td>有無報到(0是無,1是有)</td>
+                <td>比賽類別</td>
+                <td>實際確認</td>
             </tr>
         </table>
     </div>
 
     <script>
-        // fetch('/admin_aicup_handle', { method: 'POST' })
-        // .then(response => response.json())
-        // .then(data => {
-        //     let space = document.getElementById('space');
-        //     // 清除舊的表格行
-        //     while (space.rows.length > 1) {
-        //         space.deleteRow(1);
-        //     }
-        //     // 添加新的表格行
-        //     for (let i = 0; i < data.names.length; i++) {
-        //         let row = space.insertRow();
-        //         let cell1 = row.insertCell(0);
-        //         let cell2 = row.insertCell(1);
-        //         cell1.innerHTML = data.names[i];
-        //         cell2.innerHTML = data.checks[i];
-        //     }
-        // })
-        // .catch(error => console.error('Error:', error));
+        // for (let i=0;i<5;i++){
+        //     var checkbox = document.createElement('input');
+        //     checkbox.type = 'checkbox';
+        //     // checkbox.checked = data.checks[i] === 0; // 根據數據設定是否選中
+        //     checkbox.classList.add('checkbox-size'); // 添加 CSS 類以增加大小
+            
+        //     // 將 checkbox 添加到單元格
+        //     correct.appendChild(checkbox);
+        // }
+        function initTable(names, competitions) {
+            let space = document.getElementById('space');
+            for (let i = 0; i < names.length; i++) {
+                let row = space.insertRow();
+                let cell1 = row.insertCell(0);
+                let cell2 = row.insertCell(1);
+                let cell3 = row.insertCell(2);
+                let cell4 = row.insertCell(3);
+
+                cell1.innerHTML = names[i];
+                cell3.innerHTML = competitions[i];
+
+                let checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className='checkID';
+                cell4.appendChild(checkbox);
+            }
+        }
+
+        // 從後端獲取初始數據並初始化表格
+        fetch('/admin_aicup_handle', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            initTable(data.names, data.competition);
+        })
+        .catch(error => console.error('Error:', error));
+
+        // 每2秒更新第二列 "有無報到" 的數據
         setInterval(() => {
             fetch('/admin_aicup_handle', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 let space = document.getElementById('space');
-                // 清除舊的表格行
-                while (space.rows.length > 1) {
-                    space.deleteRow(1);
-                }
-                // 添加新的表格行
-                for (let i = 0; i < data.names.length; i++) {
-                    let row = space.insertRow();
-                    let cell1 = row.insertCell(0);
-                    let cell2 = row.insertCell(1);
-                    cell1.innerHTML = data.names[i];
-                    cell2.innerHTML = data.checks[i];
+                for (let i = 0; i < data.checks.length; i++) {
+                    // 假設每次後端返回的數據數組都與表格行數一致
+                    let cellToUpdate = space.rows[i + 1].cells[1]; // +1 是因為第一行是標題行
+                    cellToUpdate.innerHTML = data.checks[i];
                 }
             })
             .catch(error => console.error('Error:', error));
-        }, 2000); // 每5秒更新一次
-
+        }, 2000);
     </script>
 </body>
 </html>

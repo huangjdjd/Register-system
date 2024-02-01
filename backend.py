@@ -42,13 +42,16 @@ def handle_seat():
     name=session['user_name']
     cur.execute("SELECT seat FROM user WHERE name = ?", (name,))
     seat=cur.fetchone()
+    cur.execute("SELECT competition FROM user WHERE name=?",(name,))
+    competition=cur.fetchone()[0]
     print(seat[0])
-    return js.dumps({'seat':seat[0],'name':name})
+    return js.dumps({'seat':seat[0],'name':name,'competition':competition})
     # ss=js.dumps(smsg)
 @app.route('/admin_aicup_handle',methods=['post'])
 def admin():
     name_array=[]
     check_array=[]
+    competition_array=[]
     con = sql.connect('user.db')
     cur = con.cursor()
     cur.execute("SELECT name FROM user")
@@ -59,7 +62,11 @@ def admin():
     checks=cur.fetchall()
     for check in checks:
         check_array.append(check[0])
-    return js.dumps({'names': name_array, 'checks': check_array})
+    cur.execute("SELECT competition FROM user")
+    competitions=cur.fetchall()
+    for competition in competitions:
+        competition_array.append(competition)
+    return js.dumps({'names': name_array, 'checks': check_array,'competition':competition_array})
 
 if __name__ == '__main__':
     app.run(debug=True)
