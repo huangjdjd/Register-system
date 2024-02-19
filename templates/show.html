@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,6 +27,9 @@
         }
         #white{
             padding: 20px;
+        }
+        body{
+            background-color: lightgray;
         }
     </style>
 </head>
@@ -68,4 +71,109 @@
     
     
 </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比賽座位安排</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px; /* 添加上方的内边距，留出一些空间 */
+            color: #333;
+        }
+        .table-container {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 90%; 
+            margin: 0 auto; /* 使表格在水平方向上居中 */
+            margin-top: 20px; /* 从页面顶部开始的距离 */
+        }
+        #space {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px; 
+        }
+        #space, #space th, #space td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            padding: 15px; 
+        }
+        #space th {
+            background-color: #414841;
+            color: white;
+        }
+        #space tr:nth-child(even){background-color: #f2f2f2;}
+        #space tr:hover {background-color: #ddd;}
+        .image-container {
+            text-align: center; /* 用于替代 <center> 标签 */
+            padding: 20px; /* 将原本直接应用在图片上的内边距移至容器 */
+            background-color: #343a40; /* 将背景色应用于容器 */
+            display: flex; /* 使容器的宽度适应图片 */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .responsive-image {
+            width: 100%; /* 使图片宽度响应容器宽度 */
+            max-width: 200px; /* 设置图片的最大宽度 */
+            height: auto; /* 保持图片的原始比例 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <table id="space">
+            <thead>
+                <tr>
+                    <th>報到</th>
+                    <th>姓名</th>
+                    <th>座位</th>
+                    <th>比賽名稱</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 動態內容將填充於此 -->
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="image-container">
+        <img src="../static/AIcup2023logo.png" alt="logo" class="responsive-image">
+    </div>
+    
+
+    <script>
+        // 假設的數據和函數，以展示如何動態添加內容
+        fetch('/show_seat', { method: 'POST', body: '' })
+        .then(response => response.json())
+        .then(data => show(data))
+    
+        function show(data) {
+            let space = document.getElementById('space').getElementsByTagName('tbody')[0];
+    
+            let row = space.insertRow();
+    
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            let cell4 = row.insertCell(3);
+            cell1.innerHTML = "成功";
+            cell2.innerHTML = data.name;
+            cell3.innerHTML = data.seat;
+            cell4.innerHTML = data.competition;
+        }
+    </script>
+</body>
 </html>
+
