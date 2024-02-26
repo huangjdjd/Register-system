@@ -19,15 +19,20 @@
             color: #ffffff;
         }
         .signin-container {
-            width: 100%; /* 容器宽度占满整个视口宽度 */
-            max-width: 900px; /* 调整最大宽度 */
-            padding: 40px; /* 调整内边距 */
+            width: 100%; /* 容器宽度占满整个视口宽度，可以调整为固定值或最大值 */
+            max-width: 500px; /* 固定最大宽度，避免在大屏幕上过宽 */
+            padding: 25px; /* 固定内边距 */
             background-color: #495057;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             box-sizing: border-box;
             text-align: center; /* 确保所有内容居中 */
+            margin: auto; /* 增加自动外边距以确保水平居中 */
+            position: relative; /* 添加定位以便于后续可能的定位调整 */
+            top: 0; /* 如果需要，可以调整位置使其在视口中垂直居中 */
+            left: 0; /* 同上，确保在视口中水平居中 */
         }
+
         h1 {
             margin-top: 0;
             font-size: 24px; /* 初始字体大小 */
@@ -59,24 +64,7 @@
         }
     
         /* 响应式布局调整 */
-        @media (max-width: 768px) {
-            .signin-container {
-                padding: 30px;
-            }
-            h1 {
-                font-size: 40px; /* 中等屏幕上调整标题字体大小 */
-            }
-        }
-    
-        @media (max-width: 576px) {
-            .signin-container {
-                padding: 25px;
-                max-width: 100%; /* 在小屏幕上允许容器更宽，以适应更小的字体和内边距 */
-            }
-            h1 {
-                font-size: 40px; /* 小屏幕上进一步减小标题字体大小 */
-            }
-        }
+
     </style>
     
     

@@ -30,49 +30,89 @@
         }
     </style> -->
     <style>
-        .center-container {
+        .container {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-between; /* 在主轴上分散对齐 */
+            align-items: flex-start; /* 在交叉轴上起始对齐 */
             height: 100vh;
-            position: relative;
         }
-        .table-container {
-            transform: translateY(50px); /* 將表格向下移動50px */
+        .left, .right {
+            width: 45%; /* 分别给左右两侧的容器设置宽度 */
         }
-        #space {
+        .center-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, 50px); /* 将中间的容器向上移动并居中 */
+            width: 30%; /* 设置中间容器的宽度 */
+        }
+        .table-container, #show_number {
             border-collapse: collapse;
-            width: 30%; /* 減少表格寬度 */
-            margin: 0 auto;
+            width: 100%; /* 使表格宽度充满容器 */
+            margin: 0 auto; /* 表格居中 */
         }
-        #space, #space th, #space td {
+        .table-container th, .table-container td, #show_number th, #show_number td {
             border: 1px solid black;
-            padding: 5px; /* 減少單元格內間距 */
-            font-size: 14px; /* 調整字體大小，如果需要 */
-        }
-        .checkID {
-            /* 調整 width 和 height 來控制大小 */
-            width: 15px;
-            height: 15px;
-            /* 其他樣式 */
-            cursor: pointer;
+            padding: 5px;
+            text-align: left;
+            font-size: 14px;
         }
     </style>
     
 </head>
 <body>
-    <div class="center-content">
-        <table id="space">
-            <tr>
-                <td>姓名</td>
-                <td>有無報到(0是無,1是有)</td>
-                <td>比賽類別</td>
-                <td>實際確認</td>
-            </tr>
-        </table>
+    <div class="container">
+        <div class="left">
+            <table id="show_number">
+                <tr>
+                    <td>典禮目前報到人數</td>
+                    <td>100</td>
+                </tr>
+                <tr>
+                    <td>典禮應報到人數:</td>
+                    <td><span id="currentParticipants"></span></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>已報到人數</td>
+                    <td>未報到人數</td>
+                    <td>應報到人數</td>
+                </tr>
+                <tr><td>真相只有一個-事實文字檢索與查核</td><td><span id="word_competition_remain"></span></td><td><span id="word_competition"></span></td><td>30</td></tr>
+                <tr><td>多模態病理噪音分類競賽</td><td><span id="virus_competition_remain"></span></td><td><span id="virus_competition"></span></td><td>30</td></tr>
+                <tr><td>教電腦看羽球競賽</td><td><span id="badminton_competition_remain"></span></td><td><span id="badminton_competition"></span></td><td>30</td></tr>
+                <tr><td>圍棋棋力模仿與棋風辨識</td><td><span id="Go_competition_remain"></span></td><td><span id="Go_competition"></span></td><td>30</td></tr>
+                <tr><td>隱私保護與醫學數據標準化</td><td><span id="private_competition_remain"></span></td><td><span id="private_competition"></span></td><td>30</td></tr>
+                <tr><td>玉山人估智慧挑戰賽-信用卡冒用偵測</td><td><span id="credit_competition_remain"></span></td><td><span id="credit_competition"></span></td><td>30</td></tr>
+            </table>
+        </div>
+        <div class="center-container">
+            <!-- 中间内容，如果需要 -->
+        </div>
+        <div class="right">
+            <div class="table-container">
+                <table id="space">
+                    <tr>
+                        <td>姓名</td>
+                        <td>有無報到(0是無,1是有)</td>
+                        <td>比賽類別</td>
+                        <td>實際確認</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 
     <script>
+        var all_number=150;
+        var register_number=0;
+        var word_number=0;
+        var virus_number=0;
+        var badminton_number=0;
+        var Go_number=0;
+        var private_number=0;
+        var credit_number=0;
+
         // for (let i=0;i<5;i++){
         //     var checkbox = document.createElement('input');
         //     checkbox.type = 'checkbox';
@@ -100,8 +140,6 @@
                 cell4.appendChild(checkbox);
             }
         }
-
-        // 從後端獲取初始數據並初始化表格
         fetch('/admin_aicup_handle', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
@@ -114,15 +152,63 @@
             fetch('/admin_aicup_handle', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
+                register_number=0;
+                word_number=0;
+                virus_number=0;
+                badminton_number=0;
+                Go_number=0;
+                private_number=0;
+                credit_number=0;
                 let space = document.getElementById('space');
                 for (let i = 0; i < data.checks.length; i++) {
                     // 假設每次後端返回的數據數組都與表格行數一致
                     let cellToUpdate = space.rows[i + 1].cells[1]; // +1 是因為第一行是標題行
                     cellToUpdate.innerHTML = data.checks[i];
                 }
+                for(var i=0;i<data.checks.length;i++){
+                    if(data.checks[i]==1){
+                        register_number+=1;
+                    }
+                }
+                document.getElementById('currentParticipants').textContent=register_number;
+                for (var i = 0; i < data.checks.length; i++) {
+                    if (data.competition[i][0].includes('真') && data.checks[i]==0) {
+                        word_number += 1;
+                    }
+                    if (data.competition[i][0].includes('病')&& data.checks[i]==0) {
+                        virus_number += 1;
+                    }
+                    if (data.competition[i][0].includes('羽球')&& data.checks[i]==0) {
+                        console.log(data.names[i])
+                        badminton_number += 1;
+                    }
+                    if (data.competition[i][0].includes('圍')&& data.checks[i]==0) {
+                        Go_number += 1;
+                    }
+                    if (data.competition[i][0].includes('隱')&& data.checks[i]==0) {
+                        private_number += 1;
+                    }
+                    if (data.competition[i][0].includes('信')&& data.checks[i]==0) {
+                        credit_number += 1;
+                    }
+                }
+                // console.log(data.competition[1][0])
+                document.getElementById('word_competition').textContent=word_number;
+                document.getElementById('virus_competition').textContent=virus_number;
+                document.getElementById('badminton_competition').textContent=badminton_number;
+                document.getElementById('Go_competition').textContent=Go_number;
+                document.getElementById('private_competition').textContent=private_number;
+                document.getElementById('credit_competition').textContent=credit_number;
+                document.getElementById('word_competition_remain').textContent=30-word_number;
+                document.getElementById('virus_competition_remain').textContent=30-virus_number;
+                document.getElementById('badminton_competition_remain').textContent=30-badminton_number;
+                document.getElementById('Go_competition_remain').textContent=30-Go_number;
+                document.getElementById('private_competition_remain').textContent=30-private_number;
+                document.getElementById('credit_competition_remain').textContent=30-credit_number;
             })
             .catch(error => console.error('Error:', error));
         }, 2000);
+        
     </script>
 </body>
 </html>

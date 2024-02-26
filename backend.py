@@ -66,7 +66,16 @@ def admin():
     competitions=cur.fetchall()
     for competition in competitions:
         competition_array.append(competition)
+        # print(competition_array)
     return js.dumps({'names': name_array, 'checks': check_array,'competition':competition_array})
-
+@app.route('/admin_aicup_number',methods=['post'])
+def main():
+    number=0
+    con=sql.connect('user.db')
+    cur=con.cursor()
+    cur.execute("SELECT check_in FROM user")
+    checks=cur.fetchall()
+    for check in checks:
+        print(check)
 if __name__ == '__main__':
     app.run(debug=True)
