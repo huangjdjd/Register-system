@@ -66,7 +66,7 @@
             <table id="show_number">
                 <tr>
                     <td>典禮目前報到人數</td>
-                    <td>100</td>
+                    <td>117</td>
                 </tr>
                 <tr>
                     <td>典禮應報到人數:</td>
@@ -78,12 +78,12 @@
                     <td>未報到人數</td>
                     <td>應報到人數</td>
                 </tr>
-                <tr><td>真相只有一個-事實文字檢索與查核</td><td><span id="word_competition_remain"></span></td><td><span id="word_competition"></span></td><td>30</td></tr>
-                <tr><td>多模態病理噪音分類競賽</td><td><span id="virus_competition_remain"></span></td><td><span id="virus_competition"></span></td><td>30</td></tr>
-                <tr><td>教電腦看羽球競賽</td><td><span id="badminton_competition_remain"></span></td><td><span id="badminton_competition"></span></td><td>30</td></tr>
-                <tr><td>圍棋棋力模仿與棋風辨識</td><td><span id="Go_competition_remain"></span></td><td><span id="Go_competition"></span></td><td>30</td></tr>
+                <tr><td>真相只有一個-事實文字檢索與查核</td><td><span id="word_competition_remain"></span></td><td><span id="word_competition"></span></td><td>16</td></tr>
+                <tr><td>多模態病理噪音分類競賽</td><td><span id="virus_competition_remain"></span></td><td><span id="virus_competition"></span></td><td>18</td></tr>
+                <tr><td>教電腦看羽球競賽</td><td><span id="badminton_competition_remain"></span></td><td><span id="badminton_competition"></span></td><td>13</td></tr>
+                <tr><td>圍棋棋力模仿與棋風辨識</td><td><span id="Go_competition_remain"></span></td><td><span id="Go_competition"></span></td><td>33</td></tr>
                 <tr><td>隱私保護與醫學數據標準化</td><td><span id="private_competition_remain"></span></td><td><span id="private_competition"></span></td><td>30</td></tr>
-                <tr><td>玉山人估智慧挑戰賽-信用卡冒用偵測</td><td><span id="credit_competition_remain"></span></td><td><span id="credit_competition"></span></td><td>30</td></tr>
+                <tr><td>玉山人估智慧挑戰賽-信用卡冒用偵測</td><td><span id="credit_competition_remain"></span></td><td><span id="credit_competition"></span></td><td>7</td></tr>
             </table>
         </div>
         <div class="center-container">
@@ -199,12 +199,12 @@
                 document.getElementById('Go_competition').textContent=Go_number;
                 document.getElementById('private_competition').textContent=private_number;
                 document.getElementById('credit_competition').textContent=credit_number;
-                document.getElementById('word_competition_remain').textContent=30-word_number;
-                document.getElementById('virus_competition_remain').textContent=30-virus_number;
-                document.getElementById('badminton_competition_remain').textContent=30-badminton_number;
-                document.getElementById('Go_competition_remain').textContent=30-Go_number;
+                document.getElementById('word_competition_remain').textContent=16-word_number;
+                document.getElementById('virus_competition_remain').textContent=18-virus_number;
+                document.getElementById('badminton_competition_remain').textContent=13-badminton_number;
+                document.getElementById('Go_competition_remain').textContent=33-Go_number;
                 document.getElementById('private_competition_remain').textContent=30-private_number;
-                document.getElementById('credit_competition_remain').textContent=30-credit_number;
+                document.getElementById('credit_competition_remain').textContent=7-credit_number;
             })
             .catch(error => console.error('Error:', error));
         }, 2000);
