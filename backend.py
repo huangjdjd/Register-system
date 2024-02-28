@@ -49,6 +49,8 @@ def handle_seat():
     # ss=js.dumps(smsg)
 @app.route('/admin_aicup_handle',methods=['post'])
 def admin():
+    team_array=[]
+    rank_array=[]
     name_array=[]
     check_array=[]
     competition_array=[]
@@ -67,7 +69,17 @@ def admin():
     for competition in competitions:
         competition_array.append(competition)
         # print(competition_array)
-    return js.dumps({'names': name_array, 'checks': check_array,'competition':competition_array})
+
+    cur.execute("SELECT rank FROM user")
+    ranks=cur.fetchall()
+    for rank in ranks:
+        rank_array.append(rank[0])
+
+    cur.execute("SELECT team FROM user")
+    teams=cur.fetchall()
+    for team in teams:
+        team_array.append(team[0])
+    return js.dumps({'names': name_array, 'checks': check_array,'competition':competition_array,'team':team_array,'rank':rank_array})
 @app.route('/admin_aicup_number',methods=['post'])
 def main():
     number=0
@@ -78,4 +90,4 @@ def main():
     for check in checks:
         print(check)
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0',port=5000)

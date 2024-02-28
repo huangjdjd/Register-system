@@ -117,16 +117,16 @@
         .image-container {
             text-align: center; /* 用于替代 <center> 标签 */
             padding: 20px; /* 将原本直接应用在图片上的内边距移至容器 */
-            background-color: #343a40; /* 将背景色应用于容器 */
             display: flex; /* 使容器的宽度适应图片 */
             justify-content: center;
             align-items: center;
+            background-color: transparent; /* 移除黑色背景 */
         }
 
         .responsive-image {
-            width: 100%; /* 使图片宽度响应容器宽度 */
-            max-width: 200px; /* 设置图片的最大宽度 */
+            max-width: 400px; /* 设置图片的最大宽度，根据实际图片大小调整 */
             height: auto; /* 保持图片的原始比例 */
+            /* 移除 width: 100%; 以避免强制填满容器宽度 */
         }
 
     </style>
@@ -149,7 +149,7 @@
     </div>
     <br>
     <div class="image-container">
-        <img src="../static/AIcup2023logo.png" alt="logo" class="responsive-image">
+        <img src="../static/seat.png" alt="logo" class="responsive-image">
     </div>
     
 

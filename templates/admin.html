@@ -37,7 +37,7 @@
             height: 100vh;
         }
         .left, .right {
-            width: 45%; /* 分别给左右两侧的容器设置宽度 */
+            width: 48%; /* 分别给左右两侧的容器设置宽度 */
         }
         .center-container {
             position: absolute;
@@ -78,7 +78,7 @@
                     <td>未報到人數</td>
                     <td>應報到人數</td>
                 </tr>
-                <tr><td>真相只有一個-事實文字檢索與查核</td><td><span id="word_competition_remain"></span></td><td><span id="word_competition"></span></td><td>16</td></tr>
+                <tr><td>真相只有一個-事實文字檢索與查核</td><td><span id="word_competition_remain"></span></td><td><span id="word_competition"></span></td><td>17</td></tr>
                 <tr><td>多模態病理噪音分類競賽</td><td><span id="virus_competition_remain"></span></td><td><span id="virus_competition"></span></td><td>18</td></tr>
                 <tr><td>教電腦看羽球競賽</td><td><span id="badminton_competition_remain"></span></td><td><span id="badminton_competition"></span></td><td>13</td></tr>
                 <tr><td>圍棋棋力模仿與棋風辨識</td><td><span id="Go_competition_remain"></span></td><td><span id="Go_competition"></span></td><td>33</td></tr>
@@ -96,6 +96,8 @@
                         <td>姓名</td>
                         <td>有無報到(0是無,1是有)</td>
                         <td>比賽類別</td>
+                        <td>隊伍名稱</td>
+                        <td>得獎獎項</td>
                         <td>實際確認</td>
                     </tr>
                 </table>
@@ -122,7 +124,7 @@
         //     // 將 checkbox 添加到單元格
         //     correct.appendChild(checkbox);
         // }
-        function initTable(names, competitions) {
+        function initTable(names, competitions,teams,ranks) {
             let space = document.getElementById('space');
             for (let i = 0; i < names.length; i++) {
                 let row = space.insertRow();
@@ -130,20 +132,22 @@
                 let cell2 = row.insertCell(1);
                 let cell3 = row.insertCell(2);
                 let cell4 = row.insertCell(3);
-
+                let cell5 = row.insertCell(4);
+                let cell6=row.insertCell(5)
                 cell1.innerHTML = names[i];
                 cell3.innerHTML = competitions[i];
-
+                cell4.innerHTML= teams[i]
+                cell5.innerHTML= ranks[i]
                 let checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.className='checkID';
-                cell4.appendChild(checkbox);
+                cell6.appendChild(checkbox);
             }
         }
         fetch('/admin_aicup_handle', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
-            initTable(data.names, data.competition);
+            initTable(data.names, data.competition,data.team,data.rank);
         })
         .catch(error => console.error('Error:', error));
 
@@ -199,7 +203,7 @@
                 document.getElementById('Go_competition').textContent=Go_number;
                 document.getElementById('private_competition').textContent=private_number;
                 document.getElementById('credit_competition').textContent=credit_number;
-                document.getElementById('word_competition_remain').textContent=16-word_number;
+                document.getElementById('word_competition_remain').textContent=17-word_number;
                 document.getElementById('virus_competition_remain').textContent=18-virus_number;
                 document.getElementById('badminton_competition_remain').textContent=13-badminton_number;
                 document.getElementById('Go_competition_remain').textContent=33-Go_number;
