@@ -66,11 +66,12 @@
             <table id="show_number">
                 <tr>
                     <td>典禮目前報到人數</td>
-                    <td>117</td>
+                    <td><span id="currentParticipants"></span></td>
+                    
                 </tr>
                 <tr>
                     <td>典禮應報到人數:</td>
-                    <td><span id="currentParticipants"></span></td>
+                    <td>122</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -78,11 +79,11 @@
                     <td>未報到人數</td>
                     <td>應報到人數</td>
                 </tr>
-                <tr><td>真相只有一個-事實文字檢索與查核</td><td><span id="word_competition_remain"></span></td><td><span id="word_competition"></span></td><td>17</td></tr>
+                <tr><td>真相只有一個-事實文字檢索與查核</td><td><span id="word_competition_remain"></span></td><td><span id="word_competition"></span></td><td>19</td></tr>
                 <tr><td>多模態病理噪音分類競賽</td><td><span id="virus_competition_remain"></span></td><td><span id="virus_competition"></span></td><td>18</td></tr>
                 <tr><td>教電腦看羽球競賽</td><td><span id="badminton_competition_remain"></span></td><td><span id="badminton_competition"></span></td><td>13</td></tr>
                 <tr><td>圍棋棋力模仿與棋風辨識</td><td><span id="Go_competition_remain"></span></td><td><span id="Go_competition"></span></td><td>33</td></tr>
-                <tr><td>隱私保護與醫學數據標準化</td><td><span id="private_competition_remain"></span></td><td><span id="private_competition"></span></td><td>30</td></tr>
+                <tr><td>隱私保護與醫學數據標準化</td><td><span id="private_competition_remain"></span></td><td><span id="private_competition"></span></td><td>32</td></tr>
                 <tr><td>玉山人估智慧挑戰賽-信用卡冒用偵測</td><td><span id="credit_competition_remain"></span></td><td><span id="credit_competition"></span></td><td>7</td></tr>
             </table>
         </div>
@@ -106,7 +107,6 @@
     </div>
 
     <script>
-        var all_number=150;
         var register_number=0;
         var word_number=0;
         var virus_number=0;
@@ -114,36 +114,41 @@
         var Go_number=0;
         var private_number=0;
         var credit_number=0;
-
-        // for (let i=0;i<5;i++){
-        //     var checkbox = document.createElement('input');
-        //     checkbox.type = 'checkbox';
-        //     // checkbox.checked = data.checks[i] === 0; // 根據數據設定是否選中
-        //     checkbox.classList.add('checkbox-size'); // 添加 CSS 類以增加大小
-            
-        //     // 將 checkbox 添加到單元格
-        //     correct.appendChild(checkbox);
-        // }
         function initTable(names, competitions,teams,ranks) {
             let space = document.getElementById('space');
             for (let i = 0; i < names.length; i++) {
-                let row = space.insertRow();
+                var row = space.insertRow();
                 let cell1 = row.insertCell(0);
                 let cell2 = row.insertCell(1);
                 let cell3 = row.insertCell(2);
                 let cell4 = row.insertCell(3);
                 let cell5 = row.insertCell(4);
-                let cell6=row.insertCell(5)
+                var cell6=row.insertCell(5)
                 cell1.innerHTML = names[i];
                 cell3.innerHTML = competitions[i];
                 cell4.innerHTML= teams[i]
                 cell5.innerHTML= ranks[i]
-                let checkbox = document.createElement('input');
+                var checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.className='checkID';
+                checkbox.id='check_id'+i;
+                checkbox.addEventListener('change', function() {
+                    if(this.checked) {
+                        // 如果复选框被选中
+                        console.log(this.id + ' 被选中');
+                        examine_check(i,1)
+                    } else {
+                        // 如果复选框未被选中
+                        console.log(this.id + ' 未被选中');
+                        examine_check(i,0)
+                    }
+                });
+                // console.log(checkbox.id)
                 cell6.appendChild(checkbox);
             }
+            // examine_check()
         }
+        
         fetch('/admin_aicup_handle', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
@@ -183,7 +188,6 @@
                         virus_number += 1;
                     }
                     if (data.competition[i][0].includes('羽球')&& data.checks[i]==0) {
-                        console.log(data.names[i])
                         badminton_number += 1;
                     }
                     if (data.competition[i][0].includes('圍')&& data.checks[i]==0) {
@@ -203,16 +207,32 @@
                 document.getElementById('Go_competition').textContent=Go_number;
                 document.getElementById('private_competition').textContent=private_number;
                 document.getElementById('credit_competition').textContent=credit_number;
-                document.getElementById('word_competition_remain').textContent=17-word_number;
+                document.getElementById('word_competition_remain').textContent=19-word_number;
                 document.getElementById('virus_competition_remain').textContent=18-virus_number;
                 document.getElementById('badminton_competition_remain').textContent=13-badminton_number;
                 document.getElementById('Go_competition_remain').textContent=33-Go_number;
-                document.getElementById('private_competition_remain').textContent=30-private_number;
+                document.getElementById('private_competition_remain').textContent=32-private_number;
                 document.getElementById('credit_competition_remain').textContent=7-credit_number;
             })
             .catch(error => console.error('Error:', error));
         }, 2000);
-        
+        function examine_check(checkid,checkStatus){
+            fetch('/admin_aicup_number', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'checkstatus': checkStatus,'checkid':checkid }) 
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
     </script>
 </body>
 </html>

@@ -81,13 +81,29 @@ def admin():
         team_array.append(team[0])
     return js.dumps({'names': name_array, 'checks': check_array,'competition':competition_array,'team':team_array,'rank':rank_array})
 @app.route('/admin_aicup_number',methods=['post'])
-def main():
-    number=0
+def adminCheck():
+    name_array=[]
+    name=request.get_json()
+    namecheck=name['checkstatus']
+    nameid=name['checkid']
     con=sql.connect('user.db')
     cur=con.cursor()
-    cur.execute("SELECT check_in FROM user")
-    checks=cur.fetchall()
-    for check in checks:
-        print(check)
+    cur.execute("SELECT name FROM user")
+    names=cur.fetchall()
+    judgei=0
+    for name in names:
+        if(nameid==judgei and namecheck==1):
+            cur.execute("UPDATE user set check_in=? where name=?", (1, name[0]))
+            con.commit()
+            con.close()
+        elif(nameid==judgei and namecheck==0):
+            cur.execute("UPDATE user set check_in=? where name=?", (0, name[0]))
+            con.commit()
+            con.close()
+        judgei+=1
+    # print(nameid)
+    # print(namecheck)
+    return js.dumps({'checkstatus':True})
+    
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=5000)
