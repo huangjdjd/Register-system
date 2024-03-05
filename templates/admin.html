@@ -134,11 +134,9 @@
                 checkbox.id='check_id'+i;
                 checkbox.addEventListener('change', function() {
                     if(this.checked) {
-                        // 如果复选框被选中
                         console.log(this.id + ' 被选中');
                         examine_check(i,1)
                     } else {
-                        // 如果复选框未被选中
                         console.log(this.id + ' 未被选中');
                         examine_check(i,0)
                     }
